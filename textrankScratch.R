@@ -32,3 +32,24 @@ names(tr)
 plot(sort(tr$pagerank$vector, decreasing = TRUE), 
      type = "b", ylab = "Pagerank", main = "Textrank")
 
+s <- summary(tr, n = 4)
+s <- summary(tr, n = 4, keep.sentence.order = TRUE)
+cat(s, sep = "\n")
+
+## Limit the number of candidates with the minhash algorithm
+library(textreuse)
+minhash <- minhash_generator(n = 1000, seed = 123456789)
+candidates <- textrank_candidates_lsh(x = terminology$lemma, 
+                                      sentence_id = terminology$textrank_id,
+                                      minhashFUN = minhash, 
+                                      bands = 500)
+dim(candidates)
+
+head(candidates)
+
+ tr <- textrank_sentences(data = sentences, terminology = terminology, textrank_candidates = candidates)
+s <- summary(tr, n = 4, keep.sentence.order = TRUE)
+cat(s, sep = "\n")
+
+
+
